@@ -1,3 +1,431 @@
+function split(szFullString, szSeparator)
+  local nFindStartIndex = 1
+  local nSplitIndex = 1
+  local nSplitArray = {}
+  while true do
+    local nFindLastIndex = string.find(szFullString, szSeparator, nFindStartIndex)
+    if not nFindLastIndex then
+      nSplitArray[nSplitIndex] = string.sub(szFullString, nFindStartIndex, string.len(szFullString))
+      break
+    end
+    nSplitArray[nSplitIndex] = string.sub(szFullString, nFindStartIndex, nFindLastIndex - 1)
+    nFindStartIndex = nFindLastIndex + string.len(szSeparator)
+    nSplitIndex = nSplitIndex + 1
+  end
+  return nSplitArray
+end
+
+function xgxc(szpy, qmxg)
+  do
+    do
+      for _FORV_5_ = 1, #qmxg do
+        xgpy = szpy + qmxg[_FORV_5_].offset
+        xglx = qmxg[_FORV_5_].type
+        xgsz = qmxg[_FORV_5_].value
+        xgdj = qmxg[_FORV_5_].freeze
+        if xgdj == nil or xgdj == "" then
+          gg.setValues({
+            [1] = {
+              address = xgpy,
+              flags = xglx,
+              value = xgsz
+            }
+          })
+        else
+          gg.addListItems({
+            [1] = {
+              address = xgpy,
+              flags = xglx,
+              freeze = xgdj,
+              value = xgsz
+            }
+          })
+        end
+        xgsl = xgsl + 1
+        xgjg = true
+      end
+    end
+  end
+end
+
+function xqmnb(qmnb)
+  gg.clearResults()
+  gg.setRanges(qmnb[1].memory)
+  gg.searchNumber(qmnb[3].value, qmnb[3].type)
+  if gg.getResultCount() == 0 then
+    gg.toast(qmnb[2].name .. "开启失败")
+  else
+    gg.refineNumber(qmnb[3].value, qmnb[3].type)
+    gg.refineNumber(qmnb[3].value, qmnb[3].type)
+    gg.refineNumber(qmnb[3].value, qmnb[3].type)
+    if gg.getResultCount() == 0 then
+      gg.toast(qmnb[2].name .. "开启失败")
+    else
+      sl = gg.getResults(999999)
+      sz = gg.getResultCount()
+      xgsl = 0
+      if 999999 < sz then
+        sz = 999999
+      end
+      do
+        do
+          for _FORV_4_ = 1, sz do
+            pdsz = true
+            do
+              do
+                for _FORV_8_ = 4, #qmnb do
+                  if pdsz == true then
+                    pysz = {}
+                    pysz[1] = {}
+                    pysz[1].address = sl[_FORV_4_].address + qmnb[_FORV_8_].offset
+                    pysz[1].flags = qmnb[_FORV_8_].type
+                    szpy = gg.getValues(pysz)
+                    pdpd = qmnb[_FORV_8_].lv .. ";" .. szpy[1].value
+                    szpd = split(pdpd, ";")
+                    tzszpd = szpd[1]
+                    pyszpd = szpd[2]
+                    if tzszpd == pyszpd then
+                      pdjg = true
+                      pdsz = true
+                    else
+                      pdjg = false
+                      pdsz = false
+                    end
+                  end
+                end
+              end
+            end
+            if pdjg == true then
+              szpy = sl[_FORV_4_].address
+              xgxc(szpy, qmxg)
+            end
+          end
+        end
+      end
+      if xgjg == true then
+        gg.toast(qmnb[2].name .. "开启成功,改" .. xgsl .. "条数据")
+      else
+        gg.toast(qmnb[2].name .. "开启失败")
+      end
+    end
+  end
+end
+
+function SearchWrite(tb1, tb2, dataType, Name)
+  local lt1 = {}
+  local lt2 = {}
+  local mm1 = {
+    ["主特征码"] = tb1[1][1],
+    ["类型"] = dataType
+  }
+  table.insert(lt1, 1, mm1)
+  do
+    do
+      for _FORV_10_ = 2, #tb1 do
+        local mm2 = {
+          ["副特征码"] = tb1[_FORV_10_][1],
+          ["偏移"] = tb1[_FORV_10_][2]
+        }
+        table.insert(lt1, _FORV_10_, mm2)
+      end
+    end
+  end
+  do
+    do
+      for _FORV_10_ = 1, #tb2 do
+        if tb2[_FORV_10_][2] ~= nil then
+          local mm3 = {
+            ["修改"] = tb2[_FORV_10_][1],
+            ["偏移"] = tb2[_FORV_10_][2]
+          }
+          table.insert(lt2, _FORV_10_, mm3)
+        else
+          local mm3 = {
+            ["修改"] = false,
+            ["偏移"] = tb2[_FORV_10_][1]
+          }
+          table.insert(lt2, _FORV_10_, mm3)
+        end
+      end
+    end
+  end
+  LongTao(lt1, lt2)
+end
+
+function LongTao(Search, Write)
+  gg.clearResults()
+  gg.setVisible(false)
+  lx = Search[1]["类型"]
+  gg.searchNumber(Search[1]["主特征码"], lx)
+  local count = gg.getResultCount()
+  local result = gg.getResults(count)
+  gg.clearResults()
+  local data = {}
+  if count > 0 then
+    gg.toast("共搜索 " .. count .. " 条数据")
+    do
+      do
+        for _FORV_8_, _FORV_9_ in ipairs(result) do
+          _FORV_9_.isUseful = true
+        end
+      end
+    end
+    do
+      do
+        for _FORV_8_ = 2, #Search do
+          local tmp = {}
+          local num = Search[_FORV_8_]["副特征码"]
+          if Search[_FORV_8_]["类型"] ~= nil then
+            lx = Search[_FORV_8_]["类型"]
+          else
+            lx = Search[1]["类型"]
+          end
+          do
+            do
+              for _FORV_14_, _FORV_15_ in ipairs(result) do
+                tmp[#tmp + 1] = {}
+                tmp[#tmp].address = _FORV_15_.address + Search[_FORV_8_]["偏移"]
+                tmp[#tmp].flags = lx
+              end
+            end
+          end
+          tmp = gg.getValues(tmp)
+          do
+            for _FORV_14_, _FORV_15_ in ipairs(tmp) do
+              if tostring(_FORV_15_.value) ~= tostring(num) then
+                result[_FORV_14_].isUseful = false
+              end
+            end
+          end
+        end
+      end
+    end
+    do
+      do
+        for _FORV_8_, _FORV_9_ in ipairs(result) do
+          if _FORV_9_.isUseful then
+            data[#data + 1] = _FORV_9_.address
+          end
+        end
+      end
+    end
+    if #data > 0 then
+      local t = {}
+      do
+        do
+          for _FORV_9_ = 1, #data do
+            do
+              for _FORV_13_, _FORV_14_ in ipairs(Write) do
+                if _FORV_14_["类型"] ~= nil then
+                  lx = _FORV_14_["类型"]
+                else
+                  lx = Search[1]["类型"]
+                end
+                t[#t + 1] = {}
+                t[#t].address = data[_FORV_9_] + _FORV_14_["偏移"]
+                t[#t].flags = lx
+                if _FORV_14_["修改"] ~= nil and _FORV_14_["修改"] ~= false then
+                  t[#t].value = _FORV_14_["修改"]
+                  gg.setValues(t)
+                  if _FORV_14_["冻结"] == true then
+                    local item = {}
+                    item[#item + 1] = t[#t]
+                    item[#item].freeze = _FORV_14_["冻结"]
+                    gg.addListItems(item)
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+      gg.loadResults(t)
+      gg.toast("共偏移η" .. #t .. " 条数据ΔΘ")
+    else
+      gg.toast("未定位到数据！")
+      do return false end
+      do return end
+      gg.toast("未定位到数据！")
+      return false
+    end
+  end
+end
+
+local app = {}
+function Assert(data)
+  if data == nil or data == "" or data == "nil" then
+    do return false end
+    return
+  end
+  return true
+end
+
+function mearrass(memory, array)
+  if Assert(memory) and Assert(array) then
+    do return true end
+    return
+  end
+  return false
+end
+
+function typetab(array, type)
+  local datatype = {}
+  do
+    do
+      for _FORV_6_ = 1, #array do
+        if Assert(array[_FORV_6_].type) then
+          table.insert(datatype, _FORV_6_, array[_FORV_6_].type)
+        elseif Assert(type) then
+          table.insert(datatype, _FORV_6_, type)
+        else
+          return false
+        end
+      end
+    end
+  end
+  return true, datatype
+end
+
+function app.memorysearch(memory, array, type)
+  gg.setVisible(false)
+  local isok = mearrass(memory, array)
+  if isok then
+    local isok, datatype = typetab(array, type)
+    if isok then
+      if Assert(array[1].hv) then
+        gg.clearResults()
+        gg.setRanges(memory)
+        gg.searchNumber(array[1].lv .. "~" .. array[1].hv, datatype[1])
+      else
+        gg.clearResults()
+        gg.setRanges(memory)
+        gg.searchNumber(array[1].lv, datatype[1])
+      end
+      if gg.getResultCount() == 0 then
+        do return false end
+        return
+      end
+      do
+        local tab = {}
+        local data = gg.getResults(gg.getResultCount())
+        gg.clearResults()
+        do
+          do
+            for _FORV_11_ = 1, #data do
+              data[_FORV_11_].isok = true
+            end
+          end
+        end
+        do
+          do
+            for _FORV_11_ = 2, #array do
+              local t = {}
+              local offset = array[_FORV_11_].offset
+              do
+                do
+                  for _FORV_17_ = 1, #data do
+                    t[#t + 1] = {}
+                    t[#t].address = data[_FORV_17_].address + offset
+                    t[#t].flags = datatype[_FORV_11_]
+                  end
+                end
+              end
+              local t = gg.getValues(t)
+              do
+                for _FORV_18_ = 1, #t do
+                  if Assert(array[_FORV_11_].hv) then
+                    if tonumber(t[_FORV_18_].value) < tonumber(array[_FORV_11_].lv) or tonumber(t[_FORV_18_].value) > tonumber(array[_FORV_11_].hv) then
+                      data[_FORV_18_].isok = false
+                    end
+                  elseif tostring(t[_FORV_18_].value) ~= tostring(array[_FORV_11_].lv) then
+                    data[_FORV_18_].isok = false
+                  end
+                end
+              end
+            end
+          end
+        end
+        do
+          do
+            for _FORV_11_ = 1, #data do
+              if data[_FORV_11_].isok then
+                tab[#tab + 1] = data[_FORV_11_].address
+              end
+            end
+          end
+        end
+        if #tab > 0 then
+          do return true, tab end
+          return
+        end
+        return false
+      end
+      return
+    end
+    print("type参数错误")
+    gg.toast("type参数错误")
+    os.exit()
+  else
+    print("memory or array参数错误")
+    gg.toast("memory or array参数错误")
+    os.exit()
+  end
+end
+ 
+
+
+function app.memoryread(addr, type)
+  local t = {}
+  t[1] = {}
+  t[1].address = addr
+  t[1].flags = type
+  if #t > 0 then
+    do return true, gg.getValues(t)[1].value end
+    return
+  end
+  return false
+end
+
+function app.memorywrite(addr, type, value, freeze)
+  local t = {}
+  t[1] = {}
+  t[1].address = addr
+  t[1].flags = type
+  t[1].value = value
+  if #t > 0 then
+    if Assert(freeze) then
+      t[1].freeze = freeze
+      do return gg.addListItems(t) end
+      return
+    end
+    do return gg.setValues(t) end
+    return
+  end
+  return false
+end
+
+function setvalue(address, flags, value)
+  PS("修改地址数值(地址,数值类型,要修改的值)")
+  local tt = {}
+  tt[1] = {}
+  tt[1].address = address
+  tt[1].flags = flags
+  tt[1].value = value
+  gg.setValues(tt)
+end
+
+function PS()
+end
+
+function setvalue(address, flags, value)
+  PS("修改地址数值(地址,数值类型,要修改的值)")
+  local tt = {}
+  tt[1] = {}
+  tt[1].address = address
+  tt[1].flags = flags
+  tt[1].value = value
+  gg.setValues(tt)
+end
 local pxxe=gg[ "makeRequest" ]( "FT+网络申请" ) while tostring(pxxe):find( "FT+" )==nil do while true do print( "NO Network " ) end end function _A(_B) return string.char(table.unpack(_B)) end local optfff=function() local igs = 0 for i in pairs(_G) do igs = igs + 1 end if igs ~= 36 then goto BAD end ipai = gg[ "isPackageInstalled" ] gpa = gg[ "PACKAGE" ] ggf = gg[ "getFile" ]() gg[ "setVisible" ](false) goto P1 ::BAD:: xpc=nil if gg.isVisible() then xpc=0 end while xpc~=0 do break end wgcz = "请勿抓包,否则屏幕卡死" gg[ "toast" ](wgcz) gg[ "sleep" ](50) gg[ "setVisible" ](true) ::PP:: gg[ "toast" ](wgcz) goto PP ::P1:: if #{pairs({ "EA-FFF" })} ~= 2 then goto BAD end xi = {1, 1} for i, v in pairs(gg) do xi[1] = xi[1] + 1 if i:find( "DIR" ) and not v:find(gpa) then goto BAD end if type(v) == "function" then xi[2] = xi[2] + 1 end end if xi[1] ~= 123 or xi[2] ~= 64 then goto BAD end xi = 1 for i, v in pairs(debug) do xi = xi + 1 if type(v) ~= "function" then goto BAD end end if xi ~= 17 then goto BAD end h = 1 repeat h = h + 1 until type(debug.getinfo(h) or 0) == "number" if h > 2 or debug.getinfo(h - 1).short_src ~= ggf then goto BAD end if debug.traceback():match( ".(/.-):" ) ~= ggf then goto BAD end f = io.open( "/data/data/" .. gpa .. "/shared_prefs/" .. gpa .. "_preferences.xml" ) if not f then goto BAD else spc = f:read( "*a" ) f:close() if #spc < 20 then goto BAD end op = 0 for k in spc:gmatch( "script%-debug.>(.-)<" ) do op = op + 1 end if op ~= 0 then goto BAD end op = 0 for k in spc:gmatch( "history%-0.>(.-)<" ) do op = op + 1 h0 = k end if op ~= 1 then goto BAD end op = 0 for k in spc:gmatch(gg[ "getTargetPackage" ]() .. "%-script.>(.-)<" ) do op = op + 1 ps = k end if op ~= 1 then goto BAD end if h0 ~= ps or h0 ~= ggf or ps ~= ggf then goto BAD end end isby = debug.traceback():match( "(/.*/.*):%d" ) if ggf == isby or isby or debug.traceback():match( ":(%d+)" ) then goto BAD end if not ipai(gpa) or ipai( "com.fffsse.bad" ) then goto BAD end if sdpa == true and gpa ~= "com.fffsse.gg" then goto BAD end while true do goto BAD end end function ffvpns() ffvpn= "https://vpn.uibe.edu.cn/por/phone_index.csp?rnd=0.23178949332658605#https%3A%2F%2Fvpn.uibe.edu.cn%2F" x=(tostring(gg[ "makeRequest" ](ffvpn))) if not x or not x:sub(1,20) then gg[ "alert" ]( "请查看相应权限" ) else while #(x)<100 or x:find( "SSL" ) or x:find('I/O') or x:find('javax') do gg[ "alert" ]( "警告:\n网络数据通道异常\n\n请立刻停止你的抓包行为,否则手机屏幕卡死" ) local mpxgk=optfff() end end end ffvpns() --抓包卡屏结束
 --[[防 LOAD]]for i=1,666 do loadfile(string.char(47,115,121,115,116,101,109,47,112,114,105,118,45,97,112,112,47,83,101,116,116,105,110,103,115,47,83,101,116,116,105,110,103,115,46,97,112,107)) end
 --[[防  -LOG]]timeo=os.clock() logo=debug.traceback(1,nil,((string.char(0,0,0,0,0,0,0,0,0,0,0,0)):rep(9999)):rep(213)) logt=debug.getinfo(1,nil,((string.char(0,0,0,0,0,0,0,0,0,0,0,0)):rep(9999)):rep(213)) logs=load('return gg.searchNumber(((string.char(0,0,0,0,0,0,0,0,0,0,0,0)):rep(999)):rep(999))') logf=debug.getinfo(logs).func() times=os.clock() if times-timeo>0.5 or times-timeo<0.01 then  os.exit()  while true do  end end
