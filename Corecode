@@ -571,3 +571,16 @@ function S_Pointer(t_So, t_Offset, _bit)
 	local _A = string.format('0x%X', Get_Address(t_So, t_Offset, _bit))
 	return _A
 end
+function GetValue(address, flag)
+    return gg.getValues({{address = address, flags = flag}})[1].value
+end
+
+function GotoPointer(address, offset)
+    local Addr = GetValue(address, 32) & 0xFFFFFFFFFF
+    if offset then
+        for k, v in pairs(offset) do
+            Addr = GetValue(Addr + v, 32) & 0xFFFFFFFFFF
+        end
+    end
+    return Addr
+end
